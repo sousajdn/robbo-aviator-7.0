@@ -1,0 +1,32 @@
+import telegram
+import requests
+from bs4 import BeautifulSoup
+
+TOKEN = '5843833744:AAFgsKaI_G7Q2DTQgMNE6BldsE2NOyZxGVY'
+CHAT_ID = '618671084'
+
+bot = telegram.Bot(token=5843833744:AAFgsKaI_G7Q2DTQgMNE6BldsE2NOyZxGVY)
+
+# URL do site do jogo Aviator
+url = 'https://bet7k.com/casino/23366-aviator'
+
+# Obter o HTML da página
+html = requests.get(url).content
+
+# Analisar o HTML com BeautifulSoup
+soup = BeautifulSoup(html, 'html.parser')
+
+# Obter as últimas 20 velas
+velas = soup.find_all('span', {'class': 'round'})
+
+# Verificar se a probabilidade de uma vela maior que 1.70 é alta
+probabilidade_alta = False
+for vela in velas:
+    if float(vela.text.strip()) > 1.70:
+        probabilidade_alta = True
+        break
+
+# Se a probabilidade for alta, enviar uma mensagem para o usuário
+if probabilidade_alta:
+    mensagem = 'Atenção! Há uma probabilidade alta de sair uma vela maior que 1.70 no próximo jogo do Aviator.'
+    bot.send_message(chat_id=CHAT_ID, text=mensagem)
